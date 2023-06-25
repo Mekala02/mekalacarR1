@@ -240,6 +240,16 @@ RUN apt-get update && \
 	&& apt-get clean
 
 
+#
+# Merge after test
+#
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends \
+		ros-${ROS_DISTRO}-rosserial \
+		ros-${ROS_DISTRO}-rosserial-arduino \
+	&& apt-get clean
+
+
 # 
 # setup entrypoint
 #
