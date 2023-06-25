@@ -1,0 +1,253 @@
+# Copyright (c) 2020, NVIDIA CORPORATION. All rights reserved.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+
+ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.4
+ARG PYTORCH_IMAGE
+ARG TENSORFLOW_IMAGE
+
+FROM ${PYTORCH_IMAGE} as pytorch
+FROM ${TENSORFLOW_IMAGE} as tensorflow
+FROM ${BASE_IMAGE}
+
+#For ROS
+ARG ROS_PKG=ros_base
+ENV ROS_DISTRO=noetic
+ENV ROS_ROOT=/opt/ros/${ROS_DISTRO}
+ENV ROS_PYTHON_VERSION=3
+
+#
+# setup environment
+#
+ENV DEBIAN_FRONTEND=noninteractive
+ENV CUDA_HOME="/usr/local/cuda"
+ENV PATH="/usr/local/cuda/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
+ENV LLVM_CONFIG="/usr/bin/llvm-config-9"
+
+ARG MAKEFLAGS=-j$(nproc) 
+ARG PYTHON3_VERSION=3.8
+
+RUN printenv
+
+    
+#
+# apt packages
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        python3-pip \
+		python3-dev \
+		python3-matplotlib \
+		build-essential \
+		gfortran \
+		git \
+		cmake \
+		curl \
+		libopenblas-dev \
+		liblapack-dev \
+		libblas-dev \
+		libhdf5-serial-dev \
+		hdf5-tools \
+		libhdf5-dev \
+		zlib1g-dev \
+		zip \
+		libjpeg8-dev \
+		libopenmpi3 \
+		openmpi-bin \
+		openmpi-common \
+		protobuf-compiler \
+		libprotoc-dev \
+		llvm-9 \
+		llvm-9-dev \
+		libffi-dev \
+		libsndfile1 \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+
+#
+# pull protobuf-cpp from TF container
+#
+ENV PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=cpp
+
+COPY --from=tensorflow /usr/local/bin/protoc /usr/local/bin
+COPY --from=tensorflow /usr/local/lib/libproto* /usr/local/lib/
+COPY --from=tensorflow /usr/local/include/google /usr/local/include/google
+
+
+#
+# python packages from TF/PyTorch containers
+# note:  this is done in this order bc TF has some specific version dependencies
+#
+COPY --from=pytorch /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/
+COPY --from=pytorch /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/ /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/
+
+COPY --from=tensorflow /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/
+COPY --from=tensorflow /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/ /usr/local/lib/python${PYTHON3_VERSION}/dist-packages/
+
+
+#
+# PyCUDA
+#
+RUN pip3 uninstall -y pycuda
+RUN pip3 install --no-cache-dir --verbose pycuda six
+
+
+#
+# ZED SDK
+#
+ENV LOGNAME root
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update || true
+RUN apt-get install --no-install-recommends zstd lsb-release wget less udev sudo apt-transport-https build-essential cmake -y&& \
+    echo "# R35 (release), REVISION: 1.0" > /etc/nv_tegra_release ; \
+	# wget -q --no-check-certificate -O ZED_SDK_Linux.run https://download.stereolabs.com/zedsdk/3.8/l4t35.1/jetsons && \
+    wget -q --no-check-certificate -O ZED_SDK_Linux.run https://download.stereolabs.com/zedsdk/4.0/l4t35.1/jetsons && \
+    chmod +x ZED_SDK_Linux.run ; ./ZED_SDK_Linux.run silent skip_tools && \
+    rm -rf /usr/local/zed/resources/* \
+    rm -rf ZED_SDK_Linux.run && \
+    rm -rf /var/lib/apt/lists/*
+# This symbolic link is needed to use the streaming features on Jetson inside a container
+RUN ln -sf /usr/lib/aarch64-linux-gnu/tegra/libv4l2.so.0 /usr/lib/aarch64-linux-gnu/libv4l2.so
+
+
+#
+# Tensorrt
+#
+RUN cd /tmp && \
+	git clone -b v0.3.0 --recursive https://github.com/NVIDIA-AI-IOT/torch2trt torch2trt && \
+	cd torch2trt && \
+	python3 setup.py install --verbose && \
+	cd ../ && \
+    rm -rf torch2trt
+
+
+#
+# Arduino Cli
+#
+RUN cd /tmp && \
+	wget https://downloads.arduino.cc/arduino-cli/arduino-cli_latest_Linux_ARM64.tar.gz && \
+	tar -xvf arduino-cli_latest_Linux_ARM64.tar.gz && \
+	mv arduino-cli /usr/bin && \
+	cd ../
+RUN arduino-cli core install arduino:avr && \
+	arduino-cli lib install servo && \
+	arduino-cli lib install ewma
+
+
+#
+# python pip packages
+#
+RUN pip3 install --no-cache-dir --ignore-installed pybind11 
+RUN pip3 install --no-cache-dir --verbose onnx
+RUN pip3 install --no-cache-dir --verbose scipy
+RUN pip3 install --no-cache-dir --verbose scikit-learn
+RUN pip3 install --no-cache-dir --verbose pandas
+RUN pip3 install --no-cache-dir --verbose pycuda
+RUN pip3 install --no-cache-dir --verbose numba
+RUN pip3 install --no-cache-dir --verbose flask
+RUN pip3 install --no-cache-dir --verbose waitress
+RUN pip3 install --no-cache-dir --verbose docopt
+RUN pip3 install --no-cache-dir --verbose pyserial
+RUN pip3 install --no-cache-dir --verbose tqdm
+RUN pip3 install --no-cache-dir --verbose cupy-cuda11x -f https://pip.cupy.dev/aarch64
+RUN pip3 install --no-cache-dir --verbose PrettyTable
+RUN pip3 install --no-cache-dir --verbose -U albumentations
+
+
+#
+# add the ROS deb repo to the apt sources list
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+		wget \
+		gnupg2 \
+		lsb-release \
+		ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+
+RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
+
+
+#
+# install bootstrap dependencies
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+          libpython3-dev \
+          python3-rosdep \
+          python3-rosinstall-generator \
+          python3-vcstool \
+          build-essential && \
+    rosdep init && \
+    rosdep update && \
+    rm -rf /var/lib/apt/lists/*
+
+
+#
+# download/build the ROS source
+#
+RUN mkdir ros_catkin_ws && \
+    cd ros_catkin_ws && \
+    rosinstall_generator ${ROS_PKG} vision_msgs image_transport --rosdistro ${ROS_DISTRO} --deps --tar > ${ROS_DISTRO}-${ROS_PKG}.rosinstall && \
+    mkdir src && \
+    vcs import --input ${ROS_DISTRO}-${ROS_PKG}.rosinstall ./src && \
+    apt-get update && \
+    rosdep install --from-paths ./src --ignore-packages-from-source --rosdistro ${ROS_DISTRO} --skip-keys python3-pykdl -y && \
+    python3 ./src/catkin/bin/catkin_make_isolated --install --install-space ${ROS_ROOT} -DCMAKE_BUILD_TYPE=Release && \
+    rm -rf /var/lib/apt/lists/* && \
+	cd ../
+
+
+#
+# ros_deep_learning (PyTorch-based container only)
+#
+COPY scripts/ros_deep_learning.sh /tmp/ros_deep_learning.sh
+RUN cd /tmp && \
+	bash ros_deep_learning.sh && \
+	cd ../
+
+
+# RUN apt-get purge -y '*opencv*'
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends \
+		ros-noetic-tf2-ros \
+		ros-noetic-tf2-geometry-msgs \
+		ros-noetic-diagnostic-updater \
+		ros-noetic-xacro \
+		ros-noetic-urdf \
+		ros-noetic-robot-state-publisher \
+		ros-noetic-image-transport-plugins \
+	&& apt-get clean
+
+
+# 
+# setup entrypoint
+#
+COPY scripts/ros_entrypoint.sh /ros_entrypoint.sh
+RUN echo 'source /ros_entrypoint.sh' >> /root/.bashrc
+RUN chmod 755 /ros_entrypoint.sh
+ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["bash"]
+
+
+WORKDIR /root
