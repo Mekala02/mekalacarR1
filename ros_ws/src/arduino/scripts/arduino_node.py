@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import rospy
-from std_msgs.msg import String
-from arduino.msg import ArduinoMsg
+from std_msgs.msg import String, Float32
+from arduino.msg import rc
 from common.common_functions import PID, Limiter, pwm2float, float2pwm
 
 import serial
@@ -46,7 +46,8 @@ class Arduino:
         time.sleep(0.04)
 
         rospy.init_node("arduino", anonymous=True)
-        self.fpub = rospy.Publisher("arduino", ArduinoMsg, queue_size=10)
+        self.rc_pub = rospy.Publisher("rc", rc, queue_size=10)
+        self.encoder_pub = rospy.Publisher("encoder", Float32, queue_size=10)
         self.rate = rospy.Rate(120)
         rospy.loginfo("Arduino Successfully Added")
 
@@ -81,7 +82,7 @@ class Arduino:
         If char is = 0 arduino won't use that value for controlling the actuator
         '''
         # # Speed_A is ticks/sec we converting it to unit/sec
-        # self.Speed = self.Speed_A / self.ticks_per_unit
+        self.Speed = self.Speed_A / self.ticks_per_unit
         # pilot_mode_string = "Manuel"
         # # pilot_mode_string = self.memory.memory["Pilot_Mode"]
         # self.Act_Value = pwm2float(self.Act_Value_A)
@@ -110,13 +111,13 @@ class Arduino:
         self.Steering = -pwm2float(self.Steering_A)
         self.Throttle = pwm2float(self.Act_Value_A)
 
-        msg = ArduinoMsg()
+        msg = rc()
         msg.Steering = self.Steering
         msg.Throttle = self.Throttle
-        msg.Speed = self.Speed
-        msg.Mod1 = self.Mode1
-        msg.Mod2 = self.Mode2
-        self.fpub.publish(msg)
+        msg.Button1 = self.Mode1
+        msg.Button2 = self.Mode2
+        self.rc_pub.publish(msg)
+        self.encoder_pub.publish(self.Speed)
 
         # s is for stating start of steering value t is for throttle and e is for end, \r for read ending
         formatted_data = "s" + str(Steering_Signal) + "t" + str(Throttle_Signal) + 'e' + '\r'

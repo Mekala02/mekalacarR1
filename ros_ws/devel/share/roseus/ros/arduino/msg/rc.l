@@ -1,22 +1,22 @@
 ;; Auto-generated. Do not edit!
 
 
-(when (boundp 'arduino::ArduinoMsg)
+(when (boundp 'arduino::rc)
   (if (not (find-package "ARDUINO"))
     (make-package "ARDUINO"))
-  (shadow 'ArduinoMsg (find-package "ARDUINO")))
-(unless (find-package "ARDUINO::ARDUINOMSG")
-  (make-package "ARDUINO::ARDUINOMSG"))
+  (shadow 'rc (find-package "ARDUINO")))
+(unless (find-package "ARDUINO::RC")
+  (make-package "ARDUINO::RC"))
 
 (in-package "ROS")
-;;//! \htmlinclude ArduinoMsg.msg.html
+;;//! \htmlinclude rc.msg.html
 
 
-(defclass arduino::ArduinoMsg
+(defclass arduino::rc
   :super ros::object
   :slots (_Steering _Throttle _Button1 _Button2 ))
 
-(defmethod arduino::ArduinoMsg
+(defmethod arduino::rc
   (:init
    (&key
     ((:Steering __Steering) 0.0)
@@ -82,9 +82,9 @@
    self)
   )
 
-(setf (get arduino::ArduinoMsg :md5sum-) "85d8f319b6d9e8b597120546faa1bbf9")
-(setf (get arduino::ArduinoMsg :datatype-) "arduino/ArduinoMsg")
-(setf (get arduino::ArduinoMsg :definition-)
+(setf (get arduino::rc :md5sum-) "85d8f319b6d9e8b597120546faa1bbf9")
+(setf (get arduino::rc :datatype-) "arduino/rc")
+(setf (get arduino::rc :definition-)
       "float32 Steering
 float32 Throttle
 int32 Button1
@@ -93,6 +93,6 @@ int32 Button2
 
 
 
-(provide :arduino/ArduinoMsg "85d8f319b6d9e8b597120546faa1bbf9")
+(provide :arduino/rc "85d8f319b6d9e8b597120546faa1bbf9")
 
 

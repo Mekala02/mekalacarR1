@@ -14,7 +14,7 @@ const _getByteLength = _ros_msg_utils.getByteLength;
 
 //-----------------------------------------------------------
 
-class ArduinoMsg {
+class rc {
   constructor(initObj={}) {
     if (initObj === null) {
       // initObj === null is a special case for deserialization where we don't initialize fields
@@ -52,7 +52,7 @@ class ArduinoMsg {
   }
 
   static serialize(obj, buffer, bufferOffset) {
-    // Serializes a message object of type ArduinoMsg
+    // Serializes a message object of type rc
     // Serialize message field [Steering]
     bufferOffset = _serializer.float32(obj.Steering, buffer, bufferOffset);
     // Serialize message field [Throttle]
@@ -65,9 +65,9 @@ class ArduinoMsg {
   }
 
   static deserialize(buffer, bufferOffset=[0]) {
-    //deserializes a message object of type ArduinoMsg
+    //deserializes a message object of type rc
     let len;
-    let data = new ArduinoMsg(null);
+    let data = new rc(null);
     // Deserialize message field [Steering]
     data.Steering = _deserializer.float32(buffer, bufferOffset);
     // Deserialize message field [Throttle]
@@ -85,7 +85,7 @@ class ArduinoMsg {
 
   static datatype() {
     // Returns string type for a message object
-    return 'arduino/ArduinoMsg';
+    return 'arduino/rc';
   }
 
   static md5sum() {
@@ -108,7 +108,7 @@ class ArduinoMsg {
     if (typeof msg !== 'object' || msg === null) {
       msg = {};
     }
-    const resolved = new ArduinoMsg(null);
+    const resolved = new rc(null);
     if (msg.Steering !== undefined) {
       resolved.Steering = msg.Steering;
     }
@@ -141,4 +141,4 @@ class ArduinoMsg {
     }
 };
 
-module.exports = ArduinoMsg;
+module.exports = rc;

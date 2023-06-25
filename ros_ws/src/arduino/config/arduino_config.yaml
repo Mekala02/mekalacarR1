@@ -42,7 +42,7 @@ STEERING_MID_PWM: 1540
 # Ful left
 STEERING_MAX_PWM: 1900
 ENCODER_UNITS: "m/s"
-ENCODER_TICKS_PER_UNIT: 11.7 * 10**2
+ENCODER_TICKS_PER_UNIT: 1170
 
 # Copilot
 # Thresholds for turning off turn signals (pwm)

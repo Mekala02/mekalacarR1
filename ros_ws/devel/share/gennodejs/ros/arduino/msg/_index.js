@@ -1,8 +1,8 @@
 
 "use strict";
 
-let ArduinoMsg = require('./ArduinoMsg.js');
+let rc = require('./rc.js');
 
 module.exports = {
-  ArduinoMsg: ArduinoMsg,
+  rc: rc,
 };
