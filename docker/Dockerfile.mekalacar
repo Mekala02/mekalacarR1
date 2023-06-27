@@ -247,6 +247,8 @@ RUN apt-get update && \
 	apt-get install -y --no-install-recommends \
 		ros-${ROS_DISTRO}-rosserial \
 		ros-${ROS_DISTRO}-rosserial-arduino \
+		ros-${ROS_DISTRO}-rtabmap \
+    	ros-${ROS_DISTRO}-rtabmap-ros \
 	&& apt-get clean
 
 
