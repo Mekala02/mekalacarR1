@@ -5,6 +5,8 @@
         Localization (AMCL?) estimating the location of the robot
         Navigation stack (move base) global and local planner
     -->
+    <include file="$(find description)/launch/display.launch" />
     <include file="$(find zed_wrapper)/launch/zedm.launch" />
+    <!-- <include file="$(find mekalacar_launch)/launch/include/rtabmap.launch" /> -->
     <include file="$(find arduino)/launch/arduino.launch" />
 </launch>
