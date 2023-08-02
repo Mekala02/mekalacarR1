@@ -44,9 +44,6 @@
       </geometry>
     </collision>
   </link>
-
-
-
   <link
     name="camera">
     <inertial>
@@ -100,9 +97,6 @@
     <axis
       xyz="0 0 0" />
   </joint>
-
-
-
   <link
     name="steering_f_r">
     <inertial>
@@ -110,7 +104,7 @@
         xyz="-0.0026667 -0.0012862 1.2842E-08"
         rpy="0 0 0" />
       <mass
-        value="0" />
+        value="0.004" />
       <inertia
         ixx="3.0117E-08"
         ixy="1.0965E-08"
@@ -144,7 +138,7 @@
     </collision>
   </link>
   <joint
-    name="steering_f_r"
+    name="j_steering_f_r"
     type="revolute">
     <origin
       xyz="0.1135 -0.07475 0"
@@ -156,12 +150,11 @@
     <axis
       xyz="0 0 -1" />
     <limit
-      lower="0"
-      upper="0"
+      lower="-1"
+      upper="1"
       effort="0"
       velocity="0" />
   </joint>
-
   <link
     name="tire_f_r">
     <inertial>
@@ -172,10 +165,10 @@
         value="0.042" />
       <inertia
         ixx="4.0273E-05"
-        ixy="-3.4703E-21"
-        ixz="8.2395E-25"
+        ixy="-3.471E-21"
+        ixz="1.0299E-24"
         iyy="7.1503E-05"
-        iyz="-6.7215E-25"
+        iyz="-9.6922E-25"
         izz="4.0273E-05" />
     </inertial>
     <visual>
@@ -203,7 +196,7 @@
     </collision>
   </link>
   <joint
-    name="tire_f_r"
+    name="j_tire_f_r"
     type="continuous">
     <origin
       xyz="0 0 0"
@@ -213,11 +206,61 @@
     <child
       link="tire_f_r" />
     <axis
-      xyz="0 -1 0" />
+      xyz="0 1 0" />
   </joint>
-
-
-
+  <link
+    name="tire_r_r">
+    <inertial>
+      <origin
+        xyz="4.1633E-17 -0.013779 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.042" />
+      <inertia
+        ixx="4.0273E-05"
+        ixy="1.0943E-21"
+        ixz="8.5685E-25"
+        iyy="7.1503E-05"
+        iyz="3.5125E-25"
+        izz="4.0273E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://description/meshes/tire_r_r.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://description/meshes/tire_r_r.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="j_tire_r_r"
+    type="continuous">
+    <origin
+      xyz="-0.1135 -0.07475 0"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="tire_r_r" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
   <link
     name="steering_f_l">
     <inertial>
@@ -225,7 +268,7 @@
         xyz="-0.0026667 0.0012862 -6.1313E-08"
         rpy="0 0 0" />
       <mass
-        value="0" />
+        value="0.004" />
       <inertia
         ixx="3.0116E-08"
         ixy="-1.0965E-08"
@@ -259,7 +302,7 @@
     </collision>
   </link>
   <joint
-    name="steering_f_l"
+    name="j_steering_f_l"
     type="revolute">
     <origin
       xyz="0.1135 0.07475 0"
@@ -271,26 +314,25 @@
     <axis
       xyz="0 0 -1" />
     <limit
-      lower="0"
-      upper="0"
+      lower="-1"
+      upper="1"
       effort="0"
       velocity="0" />
   </joint>
-
   <link
     name="tire_f_l">
     <inertial>
       <origin
-        xyz="0 0.013779 0"
+        xyz="-1.3878E-17 0.013779 0"
         rpy="0 0 0" />
       <mass
         value="0.042" />
       <inertia
         ixx="4.0273E-05"
-        ixy="-6.6473E-21"
-        ixz="1.0299E-24"
+        ixy="-6.6471E-21"
+        ixz="8.2395E-25"
         iyy="7.1503E-05"
-        iyz="-2.0362E-22"
+        iyz="-2.0305E-22"
         izz="4.0273E-05" />
     </inertial>
     <visual>
@@ -318,7 +360,7 @@
     </collision>
   </link>
   <joint
-    name="tire_f_l"
+    name="j_tire_f_l"
     type="continuous">
     <origin
       xyz="0 0 0"
@@ -330,80 +372,21 @@
     <axis
       xyz="0 1 0" />
   </joint>
-
-
-
-  <link
-    name="tire_r_r">
-    <inertial>
-      <origin
-        xyz="2.7756E-17 -0.013779 0"
-        rpy="0 0 0" />
-      <mass
-        value="0.042" />
-      <inertia
-        ixx="4.0273E-05"
-        ixy="1.0947E-21"
-        ixz="8.1751E-25"
-        iyy="7.1503E-05"
-        iyz="5.5724E-25"
-        izz="4.0273E-05" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://description/meshes/tire_r_r.STL" />
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.79216 0.81961 0.93333 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://description/meshes/tire_r_r.STL" />
-      </geometry>
-    </collision>
-  </link>
-  <joint
-    name="tire_r_r"
-    type="continuous">
-    <origin
-      xyz="-0.1135 -0.07475 0"
-      rpy="0 0 0" />
-    <parent
-      link="base_link" />
-    <child
-      link="tire_r_r" />
-    <axis
-      xyz="0 1 0" />
-  </joint>
-
-
-
   <link
     name="tire_r_l">
     <inertial>
       <origin
-        xyz="0 0 0"
+        xyz="0.012686 0.00022604 0.057416"
         rpy="0 0 0" />
       <mass
         value="0.042" />
       <inertia
-        ixx="0"
-        ixy="0"
-        ixz="0"
-        iyy="0"
-        iyz="0"
-        izz="0" />
+        ixx="0.00035704"
+        ixy="-4.5008E-07"
+        ixz="-8.2245E-06"
+        iyy="0.00081118"
+        iyz="-1.0048E-06"
+        izz="0.0010817" />
     </inertial>
     <visual>
       <origin
@@ -430,7 +413,7 @@
     </collision>
   </link>
   <joint
-    name="tire_r_l"
+    name="j_tire_r_l"
     type="continuous">
     <origin
       xyz="-0.1135 0.07475 0"
@@ -442,5 +425,4 @@
     <axis
       xyz="0 1 0" />
   </joint>
-
 </robot>
