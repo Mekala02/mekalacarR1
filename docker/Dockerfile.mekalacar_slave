@@ -1,0 +1,17 @@
+ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.4.4
+
+FROM osrf/ros:noetic-desktop-full
+
+#For ROS
+ENV ROS_DISTRO=noetic
+
+# 
+# setup entrypoint
+#
+COPY scripts/ros_entrypoint.sh /ros_entrypoint.sh
+RUN echo 'source /ros_entrypoint.sh' >> /root/.bashrc
+RUN chmod 755 /ros_entrypoint.sh
+ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["bash"]
+
+WORKDIR /root
