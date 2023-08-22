@@ -8,6 +8,14 @@
     name="joint_state_publisher_gui"
     pkg="joint_state_publisher_gui"
     type="joint_state_publisher_gui" /> -->
+  
+  <node 
+    pkg="description"
+    type="joint_state_publisher.py"
+    name="jsp_node"
+    output="screen">
+  </node>
+  
   <!-- <node
     name="joint_state_publisher"
     pkg="joint_state_publisher"
