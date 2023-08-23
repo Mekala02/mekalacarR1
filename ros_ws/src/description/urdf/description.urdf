@@ -48,16 +48,16 @@
     name="camera">
     <inertial>
       <origin
-        xyz="0.0096454 -0.024245 7.5091E-06"
+        xyz="0.0090454 0.0014948 0.013317"
         rpy="0 0 0" />
       <mass
         value="0.0629" />
       <inertia
         ixx="7.2944E-05"
-        ixy="9.8132E-07"
-        ixz="9.1261E-10"
+        ixy="-9.8132E-07"
+        ixz="-9.1261E-10"
         iyy="5.5471E-06"
-        iyz="-6.0108E-10"
+        iyz="-6.0468E-10"
         izz="7.2837E-05" />
     </inertial>
     <visual>
@@ -85,10 +85,10 @@
     </collision>
   </link>
   <joint
-    name="camera"
+    name="j_camera"
     type="fixed">
     <origin
-      xyz="0.08371 0.02275 0.12325"
+      xyz="0.0814 0 0.11015"
       rpy="0 0.17453 0" />
     <parent
       link="base_link" />
@@ -159,16 +159,16 @@
     name="tire_f_r">
     <inertial>
       <origin
-        xyz="0 -0.013779 1.3878E-17"
+        xyz="1.3878E-17 -0.013779 2.7756E-17"
         rpy="0 0 0" />
       <mass
         value="0.042" />
       <inertia
         ixx="4.0273E-05"
-        ixy="-3.471E-21"
-        ixz="1.0299E-24"
+        ixy="-3.4713E-21"
+        ixz="3.4439E-25"
         iyy="7.1503E-05"
-        iyz="-9.6922E-25"
+        iyz="1.0935E-24"
         izz="4.0273E-05" />
     </inertial>
     <visual>
@@ -200,28 +200,28 @@
     type="continuous">
     <origin
       xyz="0 0 0"
-      rpy="0 0.087266 0" />
+      rpy="0 0.0872664625997168 0" />
     <parent
       link="steering_f_r" />
     <child
       link="tire_f_r" />
     <axis
-      xyz="0 1 0" />
+      xyz="0 -1 0" />
   </joint>
   <link
     name="tire_r_r">
     <inertial>
       <origin
-        xyz="4.1633E-17 -0.013779 0"
+        xyz="1.3878E-17 -0.013779 0"
         rpy="0 0 0" />
       <mass
         value="0.042" />
       <inertia
         ixx="4.0273E-05"
-        ixy="1.0943E-21"
-        ixz="8.5685E-25"
+        ixy="1.0933E-21"
+        ixz="8.6257E-25"
         iyy="7.1503E-05"
-        iyz="3.5125E-25"
+        iyz="1.2178E-24"
         izz="4.0273E-05" />
     </inertial>
     <visual>
@@ -306,7 +306,7 @@
     type="revolute">
     <origin
       xyz="0.1135 0.07475 0"
-      rpy="0 -0.087266 0" />
+      rpy="0 -0.0872664625997165 0" />
     <parent
       link="base_link" />
     <child
@@ -323,16 +323,16 @@
     name="tire_f_l">
     <inertial>
       <origin
-        xyz="-1.3878E-17 0.013779 0"
+        xyz="0 0.013779 0"
         rpy="0 0 0" />
       <mass
         value="0.042" />
       <inertia
         ixx="4.0273E-05"
-        ixy="-6.6471E-21"
-        ixz="8.2395E-25"
+        ixy="-6.6522E-21"
+        ixz="-6.0509E-25"
         iyy="7.1503E-05"
-        iyz="-2.0305E-22"
+        iyz="-2.0239E-22"
         izz="4.0273E-05" />
     </inertial>
     <visual>
@@ -371,22 +371,26 @@
       link="tire_f_l" />
     <axis
       xyz="0 1 0" />
+    <mimic
+      joint="j_tire_f_r"
+      multiplier="1"
+      offset="0" />
   </joint>
   <link
     name="tire_r_l">
     <inertial>
       <origin
-        xyz="0.012686 0.00022604 0.057416"
+        xyz="-1.3878E-17 0.013779 1.3878E-17"
         rpy="0 0 0" />
       <mass
         value="0.042" />
       <inertia
-        ixx="0.00035704"
-        ixy="-4.5008E-07"
-        ixz="-8.2245E-06"
-        iyy="0.00081118"
-        iyz="-1.0048E-06"
-        izz="0.0010817" />
+        ixx="4.0273E-05"
+        ixy="-7.2676E-22"
+        ixz="8.2395E-25"
+        iyy="7.1503E-05"
+        iyz="-9.9948E-25"
+        izz="4.0273E-05" />
     </inertial>
     <visual>
       <origin
@@ -399,7 +403,7 @@
       <material
         name="">
         <color
-          rgba="1 1 1 1" />
+          rgba="0.79216 0.81961 0.93333 1" />
       </material>
     </visual>
     <collision>
@@ -424,5 +428,115 @@
       link="tire_r_l" />
     <axis
       xyz="0 1 0" />
+    <mimic
+      joint="j_tire_r_r"
+      multiplier="1"
+      offset="0" />
+  </joint>
+  <link
+    name="front_axle">
+    <inertial>
+      <origin
+        xyz="-0.093045 -0.00028352 0.052162"
+        rpy="0 0 0" />
+      <mass
+        value="0" />
+      <inertia
+        ixx="0.0034402"
+        ixy="-8.3857E-06"
+        ixz="-0.00085591"
+        iyy="0.0057556"
+        iyz="-1.6835E-05"
+        izz="0.0063215" />
+    </inertial>
+    <!-- <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://description/meshes/front_axle.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://description/meshes/front_axle.STL" />
+      </geometry>
+    </collision> -->
+  </link>
+  <joint
+    name="j_front_axle"
+    type="fixed">
+    <origin
+      xyz="0.1135 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="front_axle" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="rear_axle">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="0" />
+      <inertia
+        ixx="0"
+        ixy="0"
+        ixz="0"
+        iyy="0"
+        iyz="0"
+        izz="0" />
+    </inertial>
+    <!-- <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://description/meshes/rear_axle.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual> -->
+    <!-- <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://description/meshes/rear_axle.STL" />
+      </geometry>
+    </collision> -->
+  </link>
+  <joint
+    name="j_rear_axle"
+    type="fixed">
+    <origin
+      xyz="-0.1135 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="rear_axle" />
+    <axis
+      xyz="0 0 0" />
   </joint>
 </robot>
