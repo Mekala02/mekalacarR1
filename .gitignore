@@ -245,3 +245,6 @@ qtcreator-*
 
 # Catkin custom files
 CATKIN_IGNORE
+.rviz/persistent_settings
+.ros/rospack_cache_13290457522147305152
+.ros/log/latest
