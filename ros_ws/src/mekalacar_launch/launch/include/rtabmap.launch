@@ -1,5 +1,6 @@
 <launch>
     <arg name="rtabmap_args" />
+    <arg name="map_name" />
 
     <group ns="rtabmap">
 
@@ -30,6 +31,8 @@
             <param name="RGBD/AngularUpdate"        type="string" value="0.01"/>
             <param name="RGBD/LinearUpdate"         type="string" value="0.01"/>
             <param name="RGBD/OptimizeFromGraphEnd" type="string" value="false"/>
+
+            <param name="database_path" type="string" value="$(find navigation)/maps/$(arg map_name).db"/>
         </node>
     </group>
 </launch>
