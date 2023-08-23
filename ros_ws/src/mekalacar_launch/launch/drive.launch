@@ -5,15 +5,20 @@
         Localization (AMCL?) estimating the location of the robot
         Navigation stack (move base) global and local planner
     -->
+    <arg name="move_forward_only" default="true"/>
+    
     <include file="$(find description)/launch/display.launch" />
     <include file="$(find zed_wrapper)/launch/zedm.launch">
-        <arg name="cam_pos_x" value="0.08371" /> <!-- Position respect to base frame (i.e. "base_link) -->
-        <arg name="cam_pos_y" value="0.02275" /> <!-- Position respect to base frame (i.e. "base_link) -->
-        <arg name="cam_pos_z" value="0.12325" /> <!-- Position respect to base frame (i.e. "base_link) -->
+        <arg name="cam_pos_x" value="0.0814" /> <!-- Position respect to base frame (i.e. "base_link) -->
+        <arg name="cam_pos_y" value="0" /> <!-- Position respect to base frame (i.e. "base_link) -->
+        <arg name="cam_pos_z" value="0.11015" /> <!-- Position respect to base frame (i.e. "base_link) -->
         <arg name="cam_roll" value="0.0" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
         <arg name="cam_pitch" value="0.17453" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
         <arg name="cam_yaw" value="0.0" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
     </include>
     <include file="$(find mekalacar_launch)/launch/include/rtabmap.launch" />
     <include file="$(find arduino)/launch/arduino.launch" />
+    <include file="$(find navigation)/launch/move_base.launch">    
+        <arg name="move_forward_only" value="$(arg move_forward_only)"/>
+    </include>
 </launch>
