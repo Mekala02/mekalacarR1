@@ -1,4 +1,6 @@
 <launch>
+    <arg name="rtabmap_args" />
+
     <group ns="rtabmap">
 
         <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_sync/rgbd_sync" output="screen">
@@ -12,7 +14,7 @@
             <param name="approx_sync"       value="false"/> 
         </node>
 
-        <node name="rtabmap" pkg="rtabmap_slam" type="rtabmap" output="screen" args="--delete_db_on_start">
+        <node name="rtabmap" pkg="rtabmap_slam" type="rtabmap" output="screen" args="$(arg rtabmap_args)">
             <param name="frame_id" type="string" value="base_link"/>
 
             <param name="subscribe_depth" type="bool" value="false"/>
