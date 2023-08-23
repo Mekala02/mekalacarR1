@@ -5,14 +5,11 @@
         Localization (AMCL?) estimating the location of the robot
         Navigation stack (move base) global and local planner
     -->
-    <arg name="new_map" default="false"/>
-
-    <arg name="rtabmap_args" default=""/>
-    <arg name="map_name" default="rtabmap"/>
-
-    <group if="$(arg new_map)">
-        <arg name="rtabmap_args" default="--delete_db_on_start"/>
-    </group>
+    <arg name="new_map" default="false" />
+    <arg name="map_name" default="koy"/>
+    
+    <arg if="$(arg new_map)" name="rtabmap_args" value="--delete_db_on_start" />
+    <arg unless="$(arg new_map)" name="rtabmap_args" value="" />
 
     <arg name="move_forward_only" default="true"/>
     
@@ -26,11 +23,13 @@
         <arg name="cam_yaw" value="0.0" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
     </include>
     <include file="$(find arduino)/launch/arduino.launch" />
-    <include file="$(find navigation)/launch/move_base.launch">    
-        <arg name="move_forward_only" value="$(arg move_forward_only)"/>
-    </include>
+
     <include file="$(find mekalacar_launch)/launch/include/rtabmap.launch">
         <arg name="rtabmap_args" value="$(arg rtabmap_args)"/>
         <arg name="map_name" value="$(arg map_name)"/>
     </include>
 </launch>
+
+<!-- <include file="$(find navigation)/launch/move_base.launch">    
+    <arg name="move_forward_only" value="$(arg move_forward_only)"/>
+</include> -->
