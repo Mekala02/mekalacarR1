@@ -9,11 +9,11 @@
     
     <include file="$(find description)/launch/display.launch" />
     <include file="$(find zed_wrapper)/launch/zedm.launch">
-        <arg name="cam_pos_x" value="0.0814" /> <!-- Position respect to base frame (i.e. "base_link) -->
-        <arg name="cam_pos_y" value="0" /> <!-- Position respect to base frame (i.e. "base_link) -->
-        <arg name="cam_pos_z" value="0.11015" /> <!-- Position respect to base frame (i.e. "base_link) -->
+        <arg name="cam_pos_x" value="0.0814000447600324" /> <!-- Position respect to base frame (i.e. "base_link) -->
+        <arg name="cam_pos_y" value="0.00875000004656613" /> <!-- Position respect to base frame (i.e. "base_link) -->
+        <arg name="cam_pos_z" value="0.110154914552125" /> <!-- Position respect to base frame (i.e. "base_link) -->
         <arg name="cam_roll" value="0.0" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
-        <arg name="cam_pitch" value="0.17453" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
+        <arg name="cam_pitch" value="0.174532925199437" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
         <arg name="cam_yaw" value="0.0" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
     </include>
     <include file="$(find mekalacar_launch)/launch/include/rtabmap.launch" />
