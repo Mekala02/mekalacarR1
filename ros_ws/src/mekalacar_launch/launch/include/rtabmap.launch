@@ -32,6 +32,12 @@
             <param name="RGBD/LinearUpdate"         type="string" value="0.01"/>
             <param name="RGBD/OptimizeFromGraphEnd" type="string" value="false"/>
 
+            <!-- Custom -->
+            <param name="Grid/RangeMax" type="string" value="3"/>
+            <param name="Grid/RayTracing" type="string" value="true"/>
+            <param name="Grid/3D" type="string" value="true"/>
+            <param name="Grid/MaxObstacleHeight" type="string" value="2"/>
+
             <param name="database_path" type="string" value="$(find navigation)/maps/$(arg map_name).db"/>
         </node>
     </group>
