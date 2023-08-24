@@ -6,10 +6,12 @@
         Navigation stack (move base) global and local planner
     -->
     <arg name="new_map" default="false" />
-    <arg name="map_name" default="koy"/>
+    <arg name="map_name" default="koyrt"/>
     
     <arg if="$(arg new_map)" name="rtabmap_args" value="--delete_db_on_start" />
     <arg unless="$(arg new_map)" name="rtabmap_args" value="" />
+
+    <arg unless="$(arg new_map)" name="localization" value="true"/>
 
     <arg name="move_forward_only" default="true"/>
     
