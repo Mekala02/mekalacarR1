@@ -1,6 +1,7 @@
 <launch>
-    <arg name="rtabmap_args" />
-    <arg name="map_name" />
+    <arg name="rtabmap_args"/>
+    <arg name="map_name"/>
+    <arg name="localization"/>
 
     <group ns="rtabmap">
 
@@ -39,6 +40,9 @@
             <param name="Grid/MaxObstacleHeight" type="string" value="2"/>
 
             <param name="database_path" type="string" value="$(find navigation)/maps/$(arg map_name).db"/>
+            <param name="localization" type="string" value="$(arg localization)"/>
+            <param name="RGBD/StartAtOrigin" type="string" value="true"/>
+            
         </node>
     </group>
 </launch>

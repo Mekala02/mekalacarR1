@@ -5,12 +5,14 @@
         Localization (AMCL?) estimating the location of the robot
         Navigation stack (move base) global and local planner
     -->
+    <remap from="/initialpose" to="/rtabmap/initialpose" />
     <arg name="new_map" default="false" />
-    <arg name="map_name" default="koyrt"/>
+    <arg name="map_name" default="koy"/>
     
     <arg if="$(arg new_map)" name="rtabmap_args" value="--delete_db_on_start" />
     <arg unless="$(arg new_map)" name="rtabmap_args" value="" />
-
+    
+    <arg if="$(arg new_map)" name="localization" value="false" />
     <arg unless="$(arg new_map)" name="localization" value="true"/>
 
     <arg name="move_forward_only" default="true"/>
@@ -29,6 +31,7 @@
     <include file="$(find mekalacar_launch)/launch/include/rtabmap.launch">
         <arg name="rtabmap_args" value="$(arg rtabmap_args)"/>
         <arg name="map_name" value="$(arg map_name)"/>
+        <arg name="localization" value="$(arg localization)"/>
     </include>
 </launch>
 
